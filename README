@@ -1,0 +1,31 @@
+# Snowfall.js
+
+Snowfall.js is a little thing that draws falling snow ontop of a page using a <canvas> and JavaScript.
+
+## Usage
+
+You will need a canvas element on your page, like this:
+
+    <canvas id="snowfall"></canvas>
+
+You will need some CSS to place it on top of the page without messing with clickabilities:
+
+    #snowfall {
+    	position: fixed;
+    	top: 0;
+    	left: 0;
+    	pointer-events: none;
+    }
+
+At last, you will need to include the Snowfall.js onto your page and activate it:
+
+    <script src="snowfall.js"></script>
+    <script>
+    	$(function() {
+    		window.snowfall = new Snowfall('snowfall', 300);
+    		   window.snowfall.fall(); // Begin animation
+    		// window.snowfall.stop(); // Stop animation
+    	});
+    </script>
+
+Here, the first argument of `Snowfall` is the ID of the canvas element and the second argument the number of snowflakes the snowfall should have. The `$(function(){})` implies presence of jQuery, but the Snowfall.js itself does not depend on any frameworks.
