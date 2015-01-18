@@ -74,7 +74,7 @@
     var i;
 
     for (i = 0; i < this.max; i += 1) {
-      this.flakes.push(new Flake(Math.floor(Math.random() * this.canvas.width), Math.floor(Math.random() * this.canvas.height * 0.45)));
+      this.flakes.push(new Flake(Math.floor(Math.random() * this.canvas.width), Math.floor(Math.random() * this.canvas.height)));
     }
   };
 
@@ -85,20 +85,21 @@
       this.flakes[i].move(delta);
 
       if (!this.flakes[i].isVisible(this.canvas.width, this.canvas.height)) {
-        this.flakes.splice(i, 1);
-        this.flakes.push(new Flake(Math.floor(Math.random() * this.canvas.width), 0));
+        this.flakes[i].reset(Math.floor(Math.random() * this.canvas.width), 0);
       }
     }
   };
 
   Snowfall.prototype.drawFrame = function () {
-    var i, len;
+    var i, len, flake;
 
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    this.context.fillStyle = '#fff';
 
     for (i = 0, len = this.flakes.length; i < len; i += 1) {
-      this.context.fillRect(this.flakes[i].x, this.flakes[i].y, this.flakes[i].size, this.flakes[i].size);
+      flake = this.flakes[i];
+
+      this.context.fillRect(flake.x, flake.y, flake.size, flake.size);
     }
   };
 
@@ -119,10 +120,13 @@
       window.requestAnimationFrame = requestAnimationFrame;
     }
 
-    last_run = new Date().getTime();
     that     = this;
 
     frame = function (now) {
+      if (typeof last_run === 'undefined') {
+        last_run = now;
+      }
+
       that.updateFlakes(now - last_run);
       that.drawFrame();
 
@@ -142,10 +146,7 @@
   };
 
   Flake = function (x, y) {
-    this.x = x;
-    this.y = y;
-    this.setSpeed();
-    this.setSize();
+    this.reset(x, y);
   };
 
   Flake.prototype.setSpeed = function () {
@@ -162,6 +163,13 @@
 
   Flake.prototype.isVisible = function (bx, by) {
     return (this.x > 0 && this.y > 0 && this.x < bx && this.y < by);
+  };
+
+  Flake.prototype.reset = function (x, y) {
+    this.x = x;
+    this.y = y;
+    this.setSpeed();
+    this.setSize();
   };
 
   window.Snowfall = new Snowfall(300);
